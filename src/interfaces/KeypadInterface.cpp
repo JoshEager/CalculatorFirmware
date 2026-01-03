@@ -5,10 +5,10 @@
 #include <array>
 #include "config.h"
 
-KeypadInterface::KeypadInterface(std::array<std::array<char, COLS>, ROWS> keys, byte *rowPins, byte *colPins, int polling_delay_ms)
+KeypadInterface::KeypadInterface(char keys[ROWS][COLS], byte *rowPins, byte *colPins, int polling_delay_ms)
 {
     this->polling_delay_ms = polling_delay_ms;
-    kpd = new Keypad(makeKeymap(keys.data()->data()), rowPins, colPins, ROWS, COLS);
+    kpd = new Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
     // Create a queue for storing the pressed keys
     key_queue = xQueueCreate(KEY_PRESS_QUEUE_LENGTH, sizeof(char));

@@ -17,7 +17,7 @@ private:
     void pollingTask();
 
 public:
-    KeypadInterface(std::array<std::array<char, COLS>, ROWS> keys, byte *rowPins, byte *colPins, int polling_delay_ms);
+    KeypadInterface(char keys[ROWS][COLS], byte *rowPins, byte *colPins, int polling_delay_ms);
 
     QueueHandle_t key_queue;
 
