@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include <Keypad.h>
-#include <array>
 #include "config.h"
+#include "tools/debug.h"
 
 KeypadInterface::KeypadInterface(char keys[ROWS][COLS], byte *rowPins, byte *colPins, int polling_delay_ms)
 {
@@ -16,24 +16,22 @@ KeypadInterface::KeypadInterface(char keys[ROWS][COLS], byte *rowPins, byte *col
 
 void KeypadInterface::pollingTask()
 {
-    Serial.println("Entered pollingTask()");
+    PRINTDBG("Entered pollingTask()");
     while (1)
     {
         if (kpd->getKey())
         { // getKeys() checks for any key presses, but also populates kpd->key[] if there is any
-            Serial.println("Keys changed!");
             for (int i = 0; i < LIST_MAX; i++)
             {
                 if (kpd->key[i].kstate == PRESSED)
                 {
                     xQueueSend(this->key_queue, &(kpd->key[i].kchar), pdMS_TO_TICKS(KEYPAD_QUEUE_WAIT_TIME_MS));
-                    Serial.println(kpd->key[i].kchar);
+                    PRINTDBG(String("Key Pressed: ") + kpd->key[i].kchar + '\n');
                 }
                 else if (kpd->key[i].kstate == HOLD)
                 {
                     xQueueSend(this->key_queue, &(kpd->key[i].kchar), pdMS_TO_TICKS(KEYPAD_QUEUE_WAIT_TIME_MS));
-                    Serial.println(kpd->key[i].kchar);
-
+                    PRINTDBG(String("Key Held: ") + kpd->key[i].kchar + '\n');
                 }
             }
         }

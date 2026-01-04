@@ -13,6 +13,7 @@
 #include "pinout.h"
 
 #define BAUD_RATE 115200
+#define DEBUG
 
 // Keypad settings
 #define ROWS 7
