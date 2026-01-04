@@ -25,6 +25,6 @@
  #define ROW7_PIN 14
 
  #define COL1_PIN 21
- #define COL2_PIN 35
- #define COL3_PIN 36
+ #define COL2_PIN 18
+ #define COL3_PIN 17
  #define COL4_PIN 20

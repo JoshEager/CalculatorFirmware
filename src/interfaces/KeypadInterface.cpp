@@ -16,7 +16,7 @@ KeypadInterface::KeypadInterface(char keys[ROWS][COLS], byte *rowPins, byte *col
 
 void KeypadInterface::pollingTask()
 {
-    PRINTDBG("Entered pollingTask()");
+    PRINTDBG("Entered pollingTask()\n");
     while (1)
     {
         if (kpd->getKey())
