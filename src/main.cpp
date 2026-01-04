@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "config.h"
+#include "config.h" // for the baud rate of serial
 #include "interfaces/KeypadInterface.h"
 
 void setup()
