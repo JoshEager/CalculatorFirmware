@@ -10,11 +10,11 @@ void setup()
     ;
   }
 
-  keypad_interface->begin();
+  KeypadInterface::begin();
 }
 
 void loop()
 {
-  // Everything handeld in tasks
+  // Everything handled in tasks
   vTaskDelete(NULL);
 }
