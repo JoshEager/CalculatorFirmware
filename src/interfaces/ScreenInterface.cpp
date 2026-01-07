@@ -17,7 +17,7 @@ namespace ScreenInterface {
         PRINTDBG("Initializing tft...");
         tft->init();
         PRINTDBG("TFT initialized!");
-        tft->setRotation(0);
+        tft->setRotation(2);
         tft->fillScreen(TFT_BLACK);
     }
 
@@ -56,6 +56,8 @@ namespace ScreenInterface {
         lv_tick_set_cb(tick_get_cb);
 
         display = lv_display_create(ILI9341_WIDTH, ILI9341_HEIGHT);
+        lv_display_set_color_format(display, LV_COLOR_FORMAT_RGB565_SWAPPED);
+
         static uint8_t buf[ILI9341_WIDTH * ILI9341_HEIGHT / 10 * 2];
         lv_display_set_buffers(display, buf, NULL, sizeof(buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
         lv_display_set_flush_cb(display, flush_cb);
@@ -65,7 +67,7 @@ namespace ScreenInterface {
         PRINTDBG("Entered uiTask()...");
         while (1) {
             lv_timer_handler();
-            vTaskDelay(10 / portTICK_PERIOD_MS);
+            vTaskDelay(5 / portTICK_PERIOD_MS);
         }
 
         vTaskDelete(NULL);
