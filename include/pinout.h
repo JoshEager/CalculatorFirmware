@@ -24,4 +24,4 @@
 #define COL1_PIN 21
 #define COL2_PIN 18
 #define COL3_PIN 17
-#define COL4_PIN 20
+#define COL4_PIN 2
