@@ -20,7 +20,3 @@
 #define COLS 4
 #define KEY_PRESS_QUEUE_LENGTH 10 // characters/keys
 #define KEYPAD_QUEUE_WAIT_TIME_MS 50
-
-// LCD settings
-#define TFT_HOR_RES 320
-#define TFT_VER_RES 240
