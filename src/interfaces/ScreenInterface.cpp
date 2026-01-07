@@ -5,6 +5,7 @@
 #include <lvgl.h>
 #include "config.h"
 #include "tools/debug.h"
+#include "gui/main_menu.h"
 
 
 namespace ScreenInterface {
@@ -66,7 +67,7 @@ namespace ScreenInterface {
     void uiTask(void *pvParameters) {
         PRINTDBG("Entered uiTask()...");
         while (1) {
-            lv_timer_handler();
+            lv_timer_handler(); // The timer task actually renders the objects on the screen
             vTaskDelay(5 / portTICK_PERIOD_MS);
         }
 
@@ -87,6 +88,8 @@ namespace ScreenInterface {
     void begin() {
         initTFT_eSPI();
         initLVGL();
+
+        gui::create_main_menu();
 
         startUI();
     }
