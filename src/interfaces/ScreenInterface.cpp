@@ -52,22 +52,22 @@ namespace ScreenInterface {
 
     static void keypad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
         static uint32_t last_key = 0; // needs to be static so that it can be used again
-        char key = KeypadInterface::getKey(); // may block for up to 5ms
+        char key = KeypadInterface::getKey(); // non blocking
 
         if (key != 0) { // getKey() returns 0 if no key was pressed
             data->state = LV_INDEV_STATE_PRESSED;
 
             switch (key) {
-                case 'a': data->key = LV_KEY_ENTER; break;
-                default: data->key = 0; break;
+                case 'a': last_key = LV_KEY_ENTER; break;
+                default: last_key = (uint32_t)key; break;
                 // add more keymappings
             }
 
-            last_key = key;
         } else { // no key was pressed
             data->state = LV_INDEV_STATE_RELEASED;
-            data->key = last_key;
         }
+        data->key = last_key;
+
     }
 
     void initLVGL() {
