@@ -10,7 +10,7 @@
 
 
 namespace ScreenInterface {
-    TFT_eSPI* tft = nullptr;
+    TFT_eSPI *tft = nullptr;
     lv_display_t *display;
 
     void initTFT_eSPI() {
@@ -58,16 +58,55 @@ namespace ScreenInterface {
             data->state = LV_INDEV_STATE_PRESSED;
 
             switch (key) {
-                case 'a': last_key = LV_KEY_ENTER; break;
-                default: last_key = (uint32_t)key; break;
-                // add more keymappings
+                // The number in the case represents the row number concatenated to the column number
+                case 14: 
+                    last_key = LV_KEY_ENTER;
+                    PRINTDBG("Enter key pressed!");
+                break;
+                
+                case 73: 
+                    last_key = LV_KEY_UP; 
+                    PRINTDBG("Up key pressed!");
+                break;
+
+                case 53:
+                    last_key = LV_KEY_DOWN;
+                    PRINTDBG("Down key pressed!");
+                break;
+
+                case 62:
+                    last_key = LV_KEY_LEFT;
+                    PRINTDBG("Left key pressed!");
+                break;
+
+                case 64:
+                    last_key = LV_KEY_RIGHT;
+                    PRINTDBG("Right key pressed");
+                break;
+
+                default: 
+                    last_key = (uint32_t)key;
+                break;
             }
 
         } else { // no key was pressed
             data->state = LV_INDEV_STATE_RELEASED;
         }
         data->key = last_key;
+    }
 
+    // Touchpad read callback for LVGL
+    static void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
+        uint16_t touchX, touchY;
+        bool touched = tft->getTouch(&touchX, &touchY);
+
+        if (touched) {
+            data->state = LV_INDEV_STATE_PRESSED;
+            data->point.x = touchX;
+            data->point.y = touchY;
+        } else {
+            data->state = LV_INDEV_STATE_RELEASED;
+        }
     }
 
     void initLVGL() {
@@ -83,7 +122,18 @@ namespace ScreenInterface {
         static uint8_t buf[ILI9341_WIDTH * ILI9341_HEIGHT / 10 * 2];
         lv_display_set_buffers(display, buf, NULL, sizeof(buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
         lv_display_set_flush_cb(display, flush_cb);
+
+        // Register keypad input device
+        lv_indev_t *keypad_indev = lv_indev_create();
+        lv_indev_set_type(keypad_indev, LV_INDEV_TYPE_KEYPAD);
+        lv_indev_set_read_cb(keypad_indev, keypad_read_cb);
+
+        // Register touchscreen input device
+        lv_indev_t *touchpad_indev = lv_indev_create();
+        lv_indev_set_type(touchpad_indev, LV_INDEV_TYPE_POINTER);
+        lv_indev_set_read_cb(touchpad_indev, touchpad_read_cb);
     }
+    
 
     void uiTask(void *pvParameters) {
         PRINTDBG("Entered uiTask()...");
@@ -99,7 +149,7 @@ namespace ScreenInterface {
         xTaskCreate(
             uiTask,     // Task function
             "UI Task",  // Task Name
-            4096,       // Stack depth (may need to increase this)
+            8192,       // Stack depth (may need to increase this)
             NULL,       // Parameters
             1,          // Priority
             NULL        // Task Handle
@@ -114,4 +164,5 @@ namespace ScreenInterface {
 
         startUI();
     }
+
 }
